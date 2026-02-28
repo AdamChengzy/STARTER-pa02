@@ -80,7 +80,11 @@ int main(int argc, char** argv){
 
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
-    for (const auto& prefix : prefixes) {
+    prefixFile.close();
+
+vector<pair<string, Movie>> bestList;
+
+for (const auto& prefix : prefixes) {
     auto list = movies.matchesSortedForPrefix(prefix);
 
     if (list.empty()) {
@@ -92,6 +96,17 @@ int main(int argc, char** argv){
         cout << m.name << ", " << fixed << setprecision(1) << m.rating << endl;
     }
     cout << endl;
+
+    Movie best;
+    movies.bestForPrefix(prefix, best);
+    bestList.push_back({prefix, best});
+}
+
+for (const auto& pr : bestList) {
+    cout << "Best movie with prefix " << pr.first
+         << " is: " << pr.second.name
+         << " with rating " << fixed << setprecision(1) << pr.second.rating
+         << endl;
 }
     return 0;
 }
