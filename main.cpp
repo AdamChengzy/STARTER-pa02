@@ -35,12 +35,13 @@ int main(int argc, char** argv){
     }
   
     // Create an object of a STL data-structure to store all the movies
-
+    Movies movies;
     string line, movieName;
     double movieRating;
     // Read each file and store the name and rating
     while (getline (movieFile, line) && parseLine(line, movieName, movieRating)){
-            // Use std::string movieName and double movieRating
+            movies.add(movieName, movieRating);
+	    // Use std::string movieName and double movieRating
             // to construct your Movie objects
             // cout << movieName << " has rating " << movieRating << endl;
             // insert elements into your data structure
@@ -49,7 +50,8 @@ int main(int argc, char** argv){
     movieFile.close();
 
     if (argc == 2){
-            //print all the movies in ascending alphabetical order of movie names
+            movies.printAll();
+	   //print all the movies in ascending alphabetical order of movie names
             return 0;
     }
 
@@ -70,12 +72,22 @@ int main(int argc, char** argv){
     //  For each prefix,
     //  Find all movies that have that prefix and store them in an appropriate data structure
     //  If no movie with that prefix exists print the following message
-    cout << "No movies found with prefix "<<"<replace with prefix>" << endl;
+    
 
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
-    cout << "Best movie with prefix " << "<replace with prefix>" << " is: " << "replace with movie name" << " with rating " << std::fixed << std::setprecision(1) << "replace with movie rating" << endl;
+    for (const auto& prefix : prefixes) {
+    string bestName;
+    double bestRating;
 
+    if (!movies.bestWithPrefix(prefix, bestName, bestRating)) {
+        cout << "No movies found with prefix " << prefix << endl;
+    } else {
+        cout << "Best movie with prefix " << prefix
+             << " is: " << bestName
+             << " with rating " << fixed << setprecision(1) << bestRating << endl;
+    }
+}
     return 0;
 }
 
