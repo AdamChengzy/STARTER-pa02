@@ -81,15 +81,17 @@ int main(int argc, char** argv){
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
     for (const auto& prefix : prefixes) {
-    Movie best;
-if (!movies.bestForPrefix(prefix, best)) {
-    cout << "No movies found with prefix " << prefix << endl;
-} else {
-    cout << "Best movie with prefix " << prefix
-         << " is: " << best.name
-         << " with rating " << fixed << setprecision(1) << best.rating
-         << endl;
-}
+    auto list = movies.matchesSortedForPrefix(prefix);
+
+    if (list.empty()) {
+        cout << "No movies found with prefix " << prefix << endl;
+        continue;
+    }
+
+    for (const auto& m : list) {
+        cout << m.name << ", " << fixed << setprecision(1) << m.rating << endl;
+    }
+    cout << endl;
 }
     return 0;
 }
