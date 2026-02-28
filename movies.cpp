@@ -1,46 +1,43 @@
 #include "movies.h"
-#include <fstream>
-#include <algorithm>
-#include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 
-void MovieDB::loadFromFile(const string& filename) {
-    ifstream fin(filename);
-    if (!fin) throw runtime_error("Cannot open file: " + filename);
+void Movies::add(const string& name, double rating) {
+    mp[name] = rating;
 }
 
-void MovieDB::sortByTitle() {
-    sort(movies.begin(), movies.end(),
-         [](const Movie& a, const Movie& b){ return a.title < b.title; });
-}
-
-void MovieDB::sortByYear() {
-    sort(movies.begin(), movies.end(),
-         [](const Movie& a, const Movie& b){ return a.year < b.year; });
-}
-
-void MovieDB::sortByRatingDesc() {
-    sort(movies.begin(), movies.end(),
-         [](const Movie& a, const Movie& b){ return a.rating > b.rating; });
-}
-
-vector<Movie> MovieDB::filterByYear(int lo, int hi) const {
-    vector<Movie> res;
-    for (const auto& m : movies) {
-        if (m.year >= lo && m.year <= hi) res.push_back(m);
+void Movies::printAll() const {
+    for (const auto& [name, rating] : mp) {
+        cout << name << ", " << fixed << setprecision(1) << rating << "\n";
     }
-    return res;
 }
 
-vector<Movie> MovieDB::topKByRating(int k) const {
-    vector<Movie> copy = movies;
-    sort(copy.begin(), copy.end(),
-         [](const Movie& a, const Movie& b){ return a.rating > b.rating; });
-    if (k < (int)copy.size()) copy.resize(k);
-    return copy;
+bool Movies::startsWith(const string& s, const string& prefix) {
+    if (prefix.size() > s.size()) return false;
+    return s.compare(0, prefix.size(), prefix) == 0;
 }
 
-const vector<Movie>& MovieDB::all() const {
-    return movies;
+bool Movies::bestWithPrefix(const string& prefix, string& bestName, double& bestRating) const {
+    auto it = mp.lower_bound(prefix);
+
+    bool found = false;
+    double best = -1e18;
+    string bestMovie;
+
+    while (it != mp.end() && startsWith(it->first, prefix)) {
+        if (!found || it->second > best) {
+            found = true;
+            best = it->second;
+            bestMovie = it->first;
+        }
+        ++it;
+    }
+
+    if (!found) return false;
+
+    bestName = bestMovie;
+    bestRating = best;
+    return true;
 }

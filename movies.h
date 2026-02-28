@@ -2,27 +2,20 @@
 #define MOVIES_H
 
 #include <string>
-#include <vector>
+#include <map>
 
-struct Movie {
-    std::string title;
-    int year = 0;
-    double rating = 0.0;
-    int runtime = 0;
-};
-
-class MovieDB {
+class Movies {
 public:
-    void loadFromFile(const std::string& filename);
-    void sortByTitle();
-    void sortByYear();
-    void sortByRatingDesc();
-    std::vector<Movie> filterByYear(int lo, int hi) const;
-    std::vector<Movie> topKByRating(int k) const;
-    const std::vector<Movie>& all() const;
+    void add(const std::string& name, double rating);
+
+    void printAll() const;
+
+    bool bestWithPrefix(const std::string& prefix, std::string& bestName, double& bestRating) const;
 
 private:
-    std::vector<Movie> movies;
+    std::map<std::string, double> mp;
+
+    static bool startsWith(const std::string& s, const std::string& prefix);
 };
 
 #endif
