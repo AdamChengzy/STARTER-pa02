@@ -50,7 +50,9 @@ int main(int argc, char** argv){
     movieFile.close();
 
     if (argc == 2){
-            movies.printAll();
+            for (const auto& m : movies.allByName()) {
+    cout << m.name << ", " << fixed << setprecision(1) << m.rating << endl;
+}
 	   //print all the movies in ascending alphabetical order of movie names
             return 0;
     }
@@ -77,16 +79,15 @@ int main(int argc, char** argv){
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
     for (const auto& prefix : prefixes) {
-    string bestName;
-    double bestRating;
-
-    if (!movies.bestWithPrefix(prefix, bestName, bestRating)) {
-        cout << "No movies found with prefix " << prefix << endl;
-    } else {
-        cout << "Best movie with prefix " << prefix
-             << " is: " << bestName
-             << " with rating " << fixed << setprecision(1) << bestRating << endl;
-    }
+    Movie best;
+if (!movies.bestForPrefix(prefix, best)) {
+    cout << "No movies found with prefix " << prefix << endl;
+} else {
+    cout << "Best movie with prefix " << prefix
+         << " is: " << best.name
+         << " with rating " << fixed << setprecision(1) << best.rating
+         << endl;
+}
 }
     return 0;
 }
