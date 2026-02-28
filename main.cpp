@@ -49,6 +49,8 @@ int main(int argc, char** argv){
 
     movieFile.close();
 
+    movies.finalize();
+
     if (argc == 2){
             for (const auto& m : movies.allByName()) {
     cout << m.name << ", " << fixed << setprecision(1) << m.rating << endl;
